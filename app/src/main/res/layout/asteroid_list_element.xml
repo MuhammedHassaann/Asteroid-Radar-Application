@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="asteroid"
+            type="com.udacity.asteroidradar.models.Asteroid" />
+
+        <variable
+            name="viewModel"
+            type="com.udacity.asteroidradar.screens.main.MainViewModel" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/midnight"
+        android:elevation="@dimen/card_elevation"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="@dimen/card_corner_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/asteroid_codename_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@{asteroid.codename}"
+                tools:text="954954 - (2023LM)"
+                android:textColor="@color/default_text_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/asteroid_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:text="@{asteroid.closeApproachDate}"
+                android:textColor="@color/text_grey"
+                android:textSize="16sp"
+                tools:text="2023 - 2 - 12"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/asteroid_codename_tv"
+                app:layout_constraintTop_toBottomOf="@+id/asteroid_codename_tv" />
+
+            <ImageView
+                android:id="@+id/asteroid_status_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                app:statusIcon="@{asteroid.potentiallyHazardous}"
+                app:layout_constraintBottom_toBottomOf="@+id/asteroid_date_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/asteroid_codename_tv"
+                app:srcCompat="@drawable/ic_status_normal" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
