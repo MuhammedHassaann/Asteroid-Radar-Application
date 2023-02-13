@@ -2,9 +2,11 @@ package com.udacity.asteroidradar.screens.main
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -20,12 +22,15 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var adapter: AsteroidAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentMainBinding.inflate(inflater)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        viewModel.addAsteroidsToDatabase()
 
         GlobalScope.launch {
             viewModel.getPicOfTheDay()
@@ -55,13 +60,11 @@ class MainFragment : Fragment() {
             adapter.submitList(it)
         })
 
-        viewModel.showDialog.observe(viewLifecycleOwner, Observer {notConnected ->
-            if (notConnected){
-                dialog()
-            }else{
-                adapter.submitList(viewModel.asteroids.value)
+/*        viewModel.showDialog.observe(viewLifecycleOwner, Observer {showDialog ->
+            if (showDialog) {
+                showDialog()
             }
-        })
+        })*/
 
         return binding.root
     }
@@ -71,6 +74,7 @@ class MainFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.show_all_menu -> viewModel.getAsteroidsOfTheWeek()
@@ -85,7 +89,7 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
     }
 
-    private fun dialog(){
+    private fun showDialog(){
         val builder = AlertDialog.Builder(context)
         builder.setTitle("No Internet Connection")
         builder.setMessage("Please turn on internet connection to continue")

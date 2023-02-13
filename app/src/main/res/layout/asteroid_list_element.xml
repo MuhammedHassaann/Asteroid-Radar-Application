@@ -24,7 +24,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:contentDescription="asteroid">
 
             <TextView
                 android:id="@+id/asteroid_codename_tv"
@@ -33,6 +34,7 @@
                 android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:text="@{asteroid.codename}"
+                android:contentDescription="@{asteroid.codename}"
                 tools:text="954954 - (2023LM)"
                 android:textColor="@color/default_text_color"
                 android:textSize="20sp"
@@ -47,6 +49,7 @@
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:layout_marginBottom="@dimen/spacing_normal"
                 android:text="@{asteroid.closeApproachDate}"
+                android:contentDescription="@{asteroid.closeApproachDate}"
                 android:textColor="@color/text_grey"
                 android:textSize="16sp"
                 tools:text="2023 - 2 - 12"
@@ -59,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/spacing_normal"
+                android:contentDescription="@{asteroid.potentiallyHazardous?@string/potentially_hazardous_asteroid_image:@string/not_hazardous_asteroid_image}"
                 app:statusIcon="@{asteroid.potentiallyHazardous}"
                 app:layout_constraintBottom_toBottomOf="@+id/asteroid_date_tv"
                 app:layout_constraintEnd_toEndOf="parent"

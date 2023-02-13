@@ -1,7 +1,9 @@
 package com.udacity.asteroidradar.repository
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.data.local.AsteroidDatabase
@@ -16,17 +18,25 @@ import org.json.JSONObject
 class AsteroidMainRepository(context: Context) {
     private val asteroidDao by lazy { AsteroidDatabase.getInstance(context).asteroidDao() }
 
-    val allAsteroids: LiveData<List<Asteroid>> = asteroidDao.getAsteroids()
 
     //get startDate
-    private val startDate = DateFormatter.getCurrentDate()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val today = DateFormatter.getCurrentDate()
+
+    //get tomorrow
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val tomorrow = DateFormatter.getTomorrowDate()
 
     //get endDate
+    @RequiresApi(Build.VERSION_CODES.O)
     private val endDate = DateFormatter.getDateAfter7Days()
 
-    suspend fun getAllAsteroids(): List<Asteroid>{
+    @RequiresApi(Build.VERSION_CODES.O)
+    val allAsteroids: LiveData<List<Asteroid>> = asteroidDao.getAsteroids(today,endDate)
+
+    suspend fun getAllAsteroids(startDate: String, endDate: String): List<Asteroid>{
         return withContext(Dispatchers.IO){
-            asteroidDao.getAllAsteroids()
+            asteroidDao.getAllAsteroids(startDate = startDate, endDate = endDate)
         }
     }
 
@@ -36,11 +46,28 @@ class AsteroidMainRepository(context: Context) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun addAsteroidsToDatabase() {
         withContext(Dispatchers.IO) {
             try {
                 val result =
-                    AsteroidInstance.api.getAsteroids(startDate, endDate, BuildConfig.API_KEY)
+                    AsteroidInstance.api.getAsteroids(today, endDate, BuildConfig.API_KEY)
+                val asteroidList =
+                    NetworkUtils.parseAsteroidsJsonResult(JSONObject(result.body().toString()))
+                updateDatabase(asteroidList)
+            } catch (e: Exception) {
+                Log.e("Response failed:", e.toString())
+            }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun downloadNext7Days() {
+        withContext(Dispatchers.IO) {
+            try {
+                val result =
+                    AsteroidInstance.api.getAsteroids(tomorrow, endDate, BuildConfig.API_KEY)
                 val asteroidList =
                     NetworkUtils.parseAsteroidsJsonResult(JSONObject(result.body().toString()))
                 updateDatabase(asteroidList)

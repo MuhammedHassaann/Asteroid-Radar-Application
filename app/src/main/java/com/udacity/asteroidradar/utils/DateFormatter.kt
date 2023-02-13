@@ -1,23 +1,31 @@
 package com.udacity.asteroidradar.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object DateFormatter {
     //method to get start date
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val currentDate = Calendar.getInstance().time
-        return dateFormat.format(currentDate)
+        val today = LocalDate.now()
+        return today.format(DateTimeFormatter.ofPattern(Constants.API_QUERY_DATE_FORMAT))
     }
 
     //method to get end date
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getDateAfter7Days(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, 7)
-        val dateAfter7Days = calendar.time
-        return dateFormat.format(dateAfter7Days)
+        val nextWeek = LocalDate.now().plusDays(7)
+        return nextWeek.format(DateTimeFormatter.ofPattern(Constants.API_QUERY_DATE_FORMAT))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTomorrowDate(): String {
+        val tomorrow = LocalDate.now().plusDays(1)
+        return tomorrow.format(DateTimeFormatter.ofPattern(Constants.API_QUERY_DATE_FORMAT))
     }
 
 }
